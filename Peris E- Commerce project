@@ -1,0 +1,218 @@
+Peris E- Commerce Project
+
+mkdir ecommerce-project
+cd ecommerce-project
+npm init -y
+ Dependencies installation
+
+npx create-react-app frontend
+cd frontend
+npm install axios react-router-dom
+
+
+
+
+mkdir backend
+cd backend
+npm 
+
+
+
+
+Perryn javascript
+
+
+
+const SearchBar = () => {
+    const [query, setQuery] = useState('');
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        // Perform search logic
+    };
+
+    return (
+        <form onSubmit={handleSearch}>
+            <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search products..."
+            />
+            <button type="submit">Search</button>
+        </form>
+    );
+};
+
+
+3. Backend Development
+
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost/ecommerce', { useNewUrlParser: true, useUnifiedTopology: true });
+
+// Define routes (authentication, products, cart, etc.)
+app.use('/api/products', require('./routes/products'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/orders', require('./routes/orders'));
+
+app.listen(5000, () => console.log('Server running on port 5000'));
+
+
+Authenticationn
+// routes/users.js
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+const router = express.Router();
+
+// Register
+router.post('/register', async (req, res) => {
+    const { email, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ email, password: hashedPassword });
+    await user.save();
+    res.status(201).send('User registered');
+});
+
+// Login
+router.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user || !await bcrypt.compare(password, user.password)) {
+        return res.status(401).send('Invalid credentials');
+    }
+    const token = jwt.sign({ id: user._id }, 'secret', { expiresIn: '1h' });
+    res.json({ token });
+});
+
+module.exports = router;
+
+// routes/cart.js
+const express = require('express');
+const router = express.Router();
+
+let cart = {}; // Example in-memory cart
+
+// Add to cart
+router.post('/add', (req, res) => {
+    const { productId, quantity } = req.body;
+    // Update cart logic
+    res.send('Item added to cart');
+});
+
+// Checkout
+router.post('/checkout', (req, res) => {
+    // Handle checkout logic (e.g., payment processing)
+    res.send('Order placed');
+});
+
+module.exports = router;
+
+
+Product Reviews and Ratingss
+// models/Product.js
+const mongoose = require('mongoose');
+
+const ProductSchema = new mongoose.Schema({
+    name: String,
+    price: Number,
+    reviews: [
+        {
+            user: String,
+            rating: Number,
+            comment: String
+        }
+    ]
+});
+
+module.exports = mongoose.model('Product', ProductSchema);
+Perina Javascript
+// routes/products.js
+const express = require('express');
+const Product = require('../models/Product');
+const router = express.Router();
+
+// Update inventory
+router.put('/update/:id', async (req, res) => {
+    const { id } = req.params;
+    const { quantity } = req.body;
+    await Product.findByIdAndUpdate(id, { quantity });
+    res.send('Inventory updated');
+});
+
+module.exports = router;
+
+// models/Promotion.js
+const mongoose = require('mongoose');
+
+const PromotionSchema = new mongoose.Schema({
+    code: String,
+    discount: Number
+});
+
+module.exports = mongoose.model('Promotion', PromotionSchema);
+
+Nally Javascript
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: 'your-email@gmail.com',
+        pass: 'your-email-password'
+    }
+});
+
+// Send an email
+const sendEmail = (to, subject, text) => {
+    transporter.sendMail({
+        from: 'your-email@gmail.com',
+        to,
+        subject,
+        text
+    });
+};
+Product image.
+perryhtml
+
+<!-- Example of product image gallery -->
+<div class="image-gallery">
+    <img src="image1.jpg" alt="Product Image 1">
+    <img src="image2.jpg" alt="Product Image 2">
+</div>
+.
+Nally html
+<!-- Example meta tags for SEO -->
+<meta name="description" content="Your e-commerce peryn ECommerce">
+<meta name="keywords" content="e-commerce, shopping, products">
+
+Perina html
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "Product Name",
+    "image": "https://example.com/product.jpg",
+    "description": "Product description",
+    "brand": {
+        "@type": "Brand",
+        "name": "Brand Name"
+    },
+    "sku": "12345",
+    "offers": {
+        "@type": "Offer",
+        "priceCurrency": "USD",
+        "price": "99.99",
+        "itemCondition": "https://schema.org/NewCondition",
+        "availability": "https://schema.org/InStock"
+    
